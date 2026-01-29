@@ -15,11 +15,11 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="relative w-full h-[85vh] md:h-[92vh] font-Outfit flex items-center justify-center overflow-hidden"
+      className="relative w-full h-[92vh] md:h-screen lg:h-[92vh] font-Outfit flex items-center justify-center overflow-hidden"
     >
       <HeroBackground/>
 
-      <div className="container mx-auto flex flex-col-reverse lg:flex-row items-center justify-between px-4 md:px-12 relative z-10">
+      <div className="container mx-auto mt-20 flex flex-col lg:flex-row items-center justify-between px-4 lg:px-12 relative z-10">
         
         {/* Left Side: Name + Dynamic Roles */}
         <div className="flex-1 text-center lg:text-left space-y-6">
