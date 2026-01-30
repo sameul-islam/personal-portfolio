@@ -20,40 +20,55 @@ const MobileNavbar = () => {
   const [visible, setVisible] = useState(true);
   const lastScroll = useRef(0);
 
+
+
+
+ useEffect(() => {
+  const onHashChange = () => setOpen(false);
+  window.addEventListener("hashchange", onHashChange);
+  return () => window.removeEventListener("hashchange", onHashChange);
+}, []);
+
+
+
   // Body Scroll Lock
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "auto";
   },[open]);
 
-// Active Section Detection
+
+  
   useEffect(() => {
-    const handler = () => {
-      navItems.forEach((item) => {
-        const section = document.querySelector(item.href);
-        if (!section) return;
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  handleScroll();
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+  };
+}, []);
 
-        const rect = section.getBoundingClientRect();
-        if (rect.top <= 120 && rect.bottom >= 120) {
-          setActive(item.href);
-        }
-      });
-    };
-
-    window.addEventListener("scroll", handler);
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
 
 // Navbar hide / show on scroll 
-  useEffect(() => {
-    const onScroll = () => {
-      const current = window.scrollY;
-      setVisible(current < lastScroll.current || current < 60);
-      lastScroll.current = current;
-    };
+const handleScroll = () => {
+  const currentScroll = window.scrollY;
 
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  // Navbar show / hide
+  setVisible(currentScroll < lastScroll.current || currentScroll < 60);
+  lastScroll.current = currentScroll;
+
+  // Active section detect
+  navItems.forEach((item) => {
+    const section = document.querySelector(item.href);
+    if (!section) return;
+
+    const rect = section.getBoundingClientRect();
+    if (rect.top <= 120 && rect.bottom >= 120) {
+      setActive(item.href);
+    }
+  });
+};
+
+
+
 
 
   // Toggle with sound

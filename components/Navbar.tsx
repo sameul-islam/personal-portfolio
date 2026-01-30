@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GiLeafSkeleton } from "react-icons/gi";
 import { SiMongodb } from "react-icons/si";
 
@@ -17,23 +17,70 @@ const navItems = [
 const Navbar = () => {
   const [active, setActive] = useState("");
 
+  const ticking = useRef(false);
 
-    useEffect(() => {
-      const handler = () => {
-        navItems.forEach((item) => {
-          const section = document.querySelector(item.href);
-          if (!section) return;
+  const detectActiveSection = () => {
+  navItems.forEach((item) => {
+    const section = document.querySelector(item.href);
+    if (!section) return;
+
+    const rect = section.getBoundingClientRect();
+
+    if (rect.top <= 120 && rect.bottom >= 120) {
+      setActive(item.href);
+    }
+  });
+};
+
+const onScroll = () => {
+  if (!ticking.current) {
+    window.requestAnimationFrame(() => {
+      detectActiveSection();
+      ticking.current = false;
+    });
+    ticking.current = true;
+  }
+};
+
+useEffect(() => {
+  window.addEventListener("scroll", onScroll);
+  return () => window.removeEventListener("scroll", onScroll);
+}, []);
+
+
+
+
+
+
+
+  // let ticking = false;
+  // const onScroll = () => {
+  //   if (!ticking) {
+  //     window.requestAnimationFrame(() => {
+  //       ticking = false;
+  //     })
+  //     ticking = true;
+  //   }
+  // }
+
+
+
+  //   useEffect(() => {
+  //     const handler = () => {
+  //       navItems.forEach((item) => {
+  //         const section = document.querySelector(item.href);
+  //         if (!section) return;
   
-          const rect = section.getBoundingClientRect();
-          if (rect.top <= 120 && rect.bottom >= 120) {
-            setActive(item.href);
-          }
-        });
-      };
+  //         const rect = section.getBoundingClientRect();
+  //         if (rect.top <= 120 && rect.bottom >= 120) {
+  //           setActive(item.href);
+  //         }
+  //       });
+  //     };
   
-      window.addEventListener("scroll", handler);
-      return () => window.removeEventListener("scroll", handler);
-    }, []);
+  //     window.addEventListener("scroll", handler);
+  //     return () => window.removeEventListener("scroll", handler);
+  //   }, []);
 
 
   return (
